@@ -1,10 +1,10 @@
 package hu.palferi.mergetool;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener; //property change stuff
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -13,14 +13,17 @@ import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
-public class FileOpenPanel extends JPanel implements ActionListener, PropertyChangeListener {
+public class FileOpenPanel extends JPanel implements ActionListener, DocumentListener {
 
 	static private JFileChooser fileDialog = new JFileChooser();
 
 	private JFormattedTextField nameField;
 	private JButton openButton;
+	private File selectedFile;
 
 	FileOpenPanel(String title) {
 
@@ -30,8 +33,8 @@ public class FileOpenPanel extends JPanel implements ActionListener, PropertyCha
 
 		nameField = new JFormattedTextField();
 		nameField.setPreferredSize(new Dimension(250, 10));
-		nameField.setEditable(false);
-		// nameField.addPropertyChangeListener(this);
+		nameField.setEditable(true);
+		nameField.getDocument().addDocumentListener(this);
 
 		openButton = new JButton("Megnyitás");
 		openButton.addActionListener(this);
@@ -64,20 +67,43 @@ public class FileOpenPanel extends JPanel implements ActionListener, PropertyCha
 		return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
 	}
 
-	// ActionListener
+	public File getSelectedFile() {
+		return selectedFile;
+	}
+
+	public void showFileError() {
+		nameField.setBackground(Color.orange);
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Handle open button action.
 		if (e.getSource() == openButton) {
 			int state = fileDialog.showOpenDialog(null);
 			if (state == JFileChooser.APPROVE_OPTION) {
-				nameField.setText(fileDialog.getSelectedFile().getName());
+				selectedFile = fileDialog.getSelectedFile();
+				nameField.setText(selectedFile.getPath());
 			}
 		}
 	}
 
-	// PropertyChangeListener
-	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getSource() == nameField) {
-		}
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		this.changedUpdate(e);
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		this.changedUpdate(e);
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		selectedFile = new File(nameField.getText());
+
+		if (selectedFile.isFile() && selectedFile.canRead())
+			nameField.setBackground(null);
+		else
+			this.showFileError();
 	}
 }

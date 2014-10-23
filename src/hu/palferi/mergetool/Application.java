@@ -3,6 +3,8 @@ package hu.palferi.mergetool;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -22,9 +24,12 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 @SuppressWarnings("serial")
-public class Application extends JPanel {
+public class Application extends JPanel implements ActionListener {
 
 	private JTable previewTable;
+	private FileOpenPanel transferFilePanel;
+	private FileOpenPanel registerFilePanel;
+	private FileOpenPanel customerFilePanel;
 
 	public Application() {
 		super();
@@ -37,9 +42,9 @@ public class Application extends JPanel {
 				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 		add(filesPanel);
 
-		FileOpenPanel transferFilePanel = new FileOpenPanel("Utalások");
-		FileOpenPanel registerFilePanel = new FileOpenPanel("Regisztációk");
-		FileOpenPanel customerFilePanel = new FileOpenPanel("Ügyféltörzs");
+		transferFilePanel = new FileOpenPanel("Utalások");
+		registerFilePanel = new FileOpenPanel("Regisztációk");
+		customerFilePanel = new FileOpenPanel("Ügyféltörzs");
 		filesPanel.add(transferFilePanel);
 		filesPanel.add(registerFilePanel);
 		filesPanel.add(customerFilePanel);
@@ -67,6 +72,7 @@ public class Application extends JPanel {
 		customerPanel.add(strictureSlider);
 
 		JButton startButton = new JButton("Mehet");
+		startButton.addActionListener(this);
 		startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		startButton.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		customerPanel.add(Box.createVerticalStrut(10));
@@ -88,6 +94,9 @@ public class Application extends JPanel {
 		tabbedPane.addTab("Számla import készítés", null);
 		tabbedPane.addTab("Előnézet", previewPanel);
 		add(tabbedPane);
+	}
+
+	public void actionPerformed(ActionEvent e) {
 	}
 
 	// Create the GUI and show it. For thread safety, this method should be invoked from the
