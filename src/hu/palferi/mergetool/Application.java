@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 public class Application extends JPanel implements ActionListener {
 
 	private InputFilesPanel inputFilesPanel;
+	private CustomerMaintenancePanel customerPanel;
 
 	public Application() {
 		super();
@@ -22,7 +23,7 @@ public class Application extends JPanel implements ActionListener {
 		inputFilesPanel = new InputFilesPanel();
 		add(inputFilesPanel);
 
-		CustomerMaintenancePanel customerPanel = new CustomerMaintenancePanel();
+		customerPanel = new CustomerMaintenancePanel();
 		customerPanel.startButton.addActionListener(this);
 
 		PreviewPanel previewPanel = new PreviewPanel();
@@ -35,6 +36,16 @@ public class Application extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (inputFilesPanel.transferFilePanel.canUseSelectedFile()
+				&& inputFilesPanel.registerFilePanel.canUseSelectedFile()
+				&& inputFilesPanel.customerFilePanel.canUseSelectedFile()) {
+			if (e.getSource() == customerPanel.startButton) {
+				// Customer Maintenance
+				if (customerPanel.outputFilePanel.canUseSelectedFile()) {
+					System.out.println(customerPanel.outputFilePanel.getSelectedFile().getPath());
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) {

@@ -25,7 +25,7 @@ public class CustomerMaintenancePanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentX(CENTER_ALIGNMENT);
 
-		outputFilePanel = new FileOpenPanel("Új ügyféltörzs", false);
+		outputFilePanel = new FileOpenPanel("Új ügyféltörzs", true);
 		outputFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
 		add(outputFilePanel);
 

@@ -24,11 +24,11 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 	private JFormattedTextField nameField;
 	private JButton openButton;
 	private File selectedFile;
-	private boolean shouldExist;
+	private boolean save;
 
-	FileOpenPanel(String title, boolean shouldExist) {
+	FileOpenPanel(String title, boolean save) {
 
-		this.shouldExist = shouldExist;
+		this.save = save;
 
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(),
@@ -70,12 +70,15 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 		return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
 	}
 
-	public boolean canReadSelectedFile() {
-		return selectedFile != null && selectedFile.isFile() && selectedFile.canRead();
-	}
-
-	public boolean canWriteSelectedFile() {
-		return selectedFile != null && selectedFile.isFile() && selectedFile.canWrite();
+	public boolean canUseSelectedFile() {
+		if (save) {
+			return !(selectedFile == null || selectedFile.isDirectory()
+					|| (selectedFile.isFile() && !selectedFile.canWrite())
+					|| selectedFile.getParentFile() == null || !selectedFile.getParentFile()
+					.isDirectory());
+		} else {
+			return (selectedFile != null && selectedFile.isFile() && selectedFile.canRead());
+		}
 	}
 
 	public File getSelectedFile() {
@@ -86,11 +89,21 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 		nameField.setBackground(Color.orange);
 	}
 
+	public void showFileOkay() {
+		nameField.setBackground(null);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Handle open button action.
+		int state;
 		if (e.getSource() == openButton) {
-			int state = fileDialog.showOpenDialog(null);
+
+			if (save)
+				state = fileDialog.showSaveDialog(null);
+			else
+				state = fileDialog.showOpenDialog(null);
+
 			if (state == JFileChooser.APPROVE_OPTION) {
 				selectedFile = fileDialog.getSelectedFile();
 				nameField.setText(selectedFile.getPath());
@@ -111,12 +124,9 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		selectedFile = new File(nameField.getText());
-
-		if (shouldExist) {
-			if (selectedFile.isFile() && selectedFile.canRead())
-				nameField.setBackground(null);
-			else
-				this.showFileError();
-		}
+		if (canUseSelectedFile())
+			this.showFileOkay();
+		else
+			this.showFileError();
 	}
 }
