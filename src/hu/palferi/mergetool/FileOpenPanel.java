@@ -24,8 +24,11 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 	private JFormattedTextField nameField;
 	private JButton openButton;
 	private File selectedFile;
+	private boolean shouldExist;
 
-	FileOpenPanel(String title) {
+	FileOpenPanel(String title, boolean shouldExist) {
+
+		this.shouldExist = shouldExist;
 
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(),
@@ -71,6 +74,10 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 		return selectedFile != null && selectedFile.isFile() && selectedFile.canRead();
 	}
 
+	public boolean canWriteSelectedFile() {
+		return selectedFile != null && selectedFile.isFile() && selectedFile.canWrite();
+	}
+
 	public File getSelectedFile() {
 		return selectedFile;
 	}
@@ -105,9 +112,11 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 	public void changedUpdate(DocumentEvent e) {
 		selectedFile = new File(nameField.getText());
 
-		if (selectedFile.isFile() && selectedFile.canRead())
-			nameField.setBackground(null);
-		else
-			this.showFileError();
+		if (shouldExist) {
+			if (selectedFile.isFile() && selectedFile.canRead())
+				nameField.setBackground(null);
+			else
+				this.showFileError();
+		}
 	}
 }

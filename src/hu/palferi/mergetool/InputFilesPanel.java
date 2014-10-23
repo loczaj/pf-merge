@@ -18,9 +18,9 @@ public class InputFilesPanel extends JPanel {
 				BorderFactory.createTitledBorder("Bemeneti fájlok"),
 				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
-		transferFilePanel = new FileOpenPanel("Utalások");
-		registerFilePanel = new FileOpenPanel("Regisztációk");
-		customerFilePanel = new FileOpenPanel("Ügyféltörzs");
+		transferFilePanel = new FileOpenPanel("Utalások", true);
+		registerFilePanel = new FileOpenPanel("Regisztációk", true);
+		customerFilePanel = new FileOpenPanel("Ügyféltörzs", true);
 
 		add(transferFilePanel);
 		add(registerFilePanel);

@@ -16,6 +16,7 @@ import javax.swing.JSlider;
 public class CustomerMaintenancePanel extends JPanel {
 
 	public JButton startButton;
+	public FileOpenPanel outputFilePanel;
 
 	public CustomerMaintenancePanel() {
 		// TODO Auto-generated constructor stub
@@ -24,9 +25,9 @@ public class CustomerMaintenancePanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentX(CENTER_ALIGNMENT);
 
-		FileOpenPanel customerOutputFilePanel = new FileOpenPanel("Új ügyféltörzs");
-		customerOutputFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
-		add(customerOutputFilePanel);
+		outputFilePanel = new FileOpenPanel("Új ügyféltörzs", false);
+		outputFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
+		add(outputFilePanel);
 
 		Dictionary<Integer, JLabel> strictureLevels = new Hashtable<>();
 		strictureLevels.put(1, new JLabel("laza"));
