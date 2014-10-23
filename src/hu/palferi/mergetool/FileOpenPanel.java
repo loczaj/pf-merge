@@ -67,6 +67,10 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 		return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
 	}
 
+	public boolean canReadSelectedFile() {
+		return selectedFile != null && selectedFile.isFile() && selectedFile.canRead();
+	}
+
 	public File getSelectedFile() {
 		return selectedFile;
 	}
