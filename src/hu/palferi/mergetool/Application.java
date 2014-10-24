@@ -2,6 +2,7 @@ package hu.palferi.mergetool;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -9,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 @SuppressWarnings("serial")
 public class Application extends JPanel implements ActionListener {
@@ -35,6 +38,7 @@ public class Application extends JPanel implements ActionListener {
 		add(tabbedPane);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (inputFilesPanel.transferFilePanel.canUseSelectedFile()
 				&& inputFilesPanel.registerFilePanel.canUseSelectedFile()
@@ -42,7 +46,18 @@ public class Application extends JPanel implements ActionListener {
 			if (e.getSource() == customerPanel.startButton) {
 				// Customer Maintenance
 				if (customerPanel.outputFilePanel.canUseSelectedFile()) {
-					System.out.println(customerPanel.outputFilePanel.getSelectedFile().getPath());
+					CustomerMaintenance maintenance = new CustomerMaintenance(
+							inputFilesPanel.transferFilePanel.getSelectedFile(),
+							inputFilesPanel.registerFilePanel.getSelectedFile(),
+							inputFilesPanel.customerFilePanel.getSelectedFile());
+
+					try {
+						maintenance.run(customerPanel.outputFilePanel.getSelectedFile(),
+								customerPanel.getStricture());
+
+					} catch (InvalidFormatException | IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		}

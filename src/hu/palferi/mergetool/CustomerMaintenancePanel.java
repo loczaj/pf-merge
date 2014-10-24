@@ -18,6 +18,8 @@ public class CustomerMaintenancePanel extends JPanel {
 	public JButton startButton;
 	public FileOpenPanel outputFilePanel;
 
+	private JSlider strictureSlider;
+
 	public CustomerMaintenancePanel() {
 		// TODO Auto-generated constructor stub
 
@@ -34,7 +36,7 @@ public class CustomerMaintenancePanel extends JPanel {
 		strictureLevels.put(3, new JLabel("közepes"));
 		strictureLevels.put(5, new JLabel("szigorú"));
 
-		JSlider strictureSlider = new JSlider(0, 1, 5, 1);
+		strictureSlider = new JSlider(0, 1, 5, 1);
 		strictureSlider.setLabelTable(strictureLevels);
 		strictureSlider.setPaintLabels(true);
 		strictureSlider.setBorder(BorderFactory.createCompoundBorder(
@@ -47,5 +49,9 @@ public class CustomerMaintenancePanel extends JPanel {
 		startButton.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		add(Box.createVerticalStrut(10));
 		add(startButton);
+	}
+
+	public int getStricture() {
+		return strictureSlider.getValue();
 	}
 }
