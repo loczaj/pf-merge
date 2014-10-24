@@ -43,11 +43,11 @@ public class Application extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent event) {
 		if (inputFilesPanel.transferFilePanel.canUseSelectedFile()
 				&& inputFilesPanel.registerFilePanel.canUseSelectedFile()
 				&& inputFilesPanel.customerFilePanel.canUseSelectedFile()) {
-			if (e.getSource() == customerPanel.startButton) {
+			if (event.getSource() == customerPanel.startButton) {
 				// Customer Maintenance
 				if (customerPanel.outputFilePanel.canUseSelectedFile()) {
 					CustomerMaintenance maintenance = new CustomerMaintenance(
@@ -59,8 +59,10 @@ public class Application extends JPanel implements ActionListener {
 						maintenance.run(customerPanel.outputFilePanel.getSelectedFile(),
 								customerPanel.getStricture());
 
-					} catch (InvalidFormatException | IOException e1) {
-						e1.printStackTrace();
+					} catch (InvalidFormatException | IOException ex) {
+						ex.printStackTrace();
+						JOptionPane.showMessageDialog(null, ex.toString(), "Uppsz",
+								JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -89,8 +91,7 @@ public class Application extends JPanel implements ActionListener {
 
 				} catch (Throwable e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(null, e.toString() + "\n" + e.getStackTrace()[0],
-							"Uppsz", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, e.toString(), "Uppsz", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
