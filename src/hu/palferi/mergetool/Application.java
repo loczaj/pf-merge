@@ -65,6 +65,7 @@ public class Application extends JPanel implements ActionListener {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setContentPane(contentPane);
 					frame.pack();
+					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 
 				} catch (Throwable e) {
