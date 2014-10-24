@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,14 +22,20 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 
 	static private JFileChooser fileDialog = new JFileChooser();
 
+	private Preferences preferences;
+
 	private JFormattedTextField nameField;
 	private JButton openButton;
-	private File selectedFile;
+
+	private String title;
 	private boolean save;
+	private File selectedFile;
 
 	FileOpenPanel(String title, boolean save) {
 
+		this.preferences = Preferences.userRoot().node(this.getClass().getName());
 		this.save = save;
+		this.title = title;
 
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(),
@@ -38,6 +45,7 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 		nameField.setPreferredSize(new Dimension(250, 10));
 		nameField.setEditable(true);
 		nameField.getDocument().addDocumentListener(this);
+		nameField.setText(preferences.get(title, ""));
 
 		openButton = new JButton("Megnyitás");
 		openButton.addActionListener(this);
@@ -82,6 +90,7 @@ public class FileOpenPanel extends JPanel implements ActionListener, DocumentLis
 	}
 
 	public File getSelectedFile() {
+		preferences.put(title, nameField.getText());
 		return selectedFile;
 	}
 
