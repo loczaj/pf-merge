@@ -1,5 +1,9 @@
 package hu.palferi.mergetool;
 
+import hu.palferi.mergetool.ui.CustomerMaintenancePanel;
+import hu.palferi.mergetool.ui.InputFilesPanel;
+import hu.palferi.mergetool.ui.PreviewPanel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;

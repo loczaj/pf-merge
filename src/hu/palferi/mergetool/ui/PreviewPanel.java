@@ -1,4 +1,4 @@
-package hu.palferi.mergetool;
+package hu.palferi.mergetool.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -12,7 +12,7 @@ public class PreviewPanel extends JPanel {
 
 	private JTable previewTable;
 
-	PreviewPanel() {
+	public PreviewPanel() {
 
 		previewTable = new JTable(new PreviewTableModel());
 		previewTable.setPreferredScrollableViewportSize(new Dimension(450, 250));

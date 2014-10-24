@@ -1,4 +1,4 @@
-package hu.palferi.mergetool;
+package hu.palferi.mergetool.ui;
 
 import javax.swing.table.AbstractTableModel;
 

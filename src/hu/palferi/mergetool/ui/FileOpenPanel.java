@@ -1,4 +1,4 @@
-package hu.palferi.mergetool;
+package hu.palferi.mergetool.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
