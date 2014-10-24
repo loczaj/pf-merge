@@ -16,11 +16,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 @SuppressWarnings("serial")
 public class FileOpenPanel extends JPanel implements ActionListener, DocumentListener {
 
 	static private JFileChooser fileDialog = new JFileChooser();
+	static {
+		fileDialog.setFileFilter(new FileNameExtensionFilter("Excel file", "xls", "xlsx"));
+	}
 
 	private Preferences preferences;
 
