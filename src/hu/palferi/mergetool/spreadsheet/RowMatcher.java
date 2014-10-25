@@ -12,10 +12,12 @@ public class RowMatcher {
 			int columnB) {
 
 		for (Row aRow : a) {
-			if (pairs.containsKey(aRow.getRowNum()))
-				continue;
 
 			for (Row bRow : b) {
+
+				if (pairs.containsKey(aRow.getRowNum()))
+					break;
+
 				if (pairs.containsValue(bRow.getRowNum()))
 					continue;
 
