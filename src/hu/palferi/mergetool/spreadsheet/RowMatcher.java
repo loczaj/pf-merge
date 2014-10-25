@@ -1,6 +1,5 @@
 package hu.palferi.mergetool.spreadsheet;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -9,9 +8,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class RowMatcher {
 
-	public static Map<Integer, Integer> doStringContainsMatch(Sheet a, Sheet b, int columnA, int columnB) {
-
-		Map<Integer, Integer> pairs = new HashMap<>();
+	public static void doStringContainsMatch(Map<Integer, Integer> pairs, Sheet a, Sheet b, int columnA,
+			int columnB) {
 
 		for (Row aRow : a) {
 			if (pairs.containsKey(aRow.getRowNum()))
@@ -36,8 +34,6 @@ public class RowMatcher {
 					pairs.put(aRow.getRowNum(), bRow.getRowNum());
 			}
 		}
-
-		return pairs;
 	}
 
 	private static boolean contains(String text, String word) {

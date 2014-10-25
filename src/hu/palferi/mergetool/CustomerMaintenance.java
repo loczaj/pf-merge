@@ -6,6 +6,7 @@ import hu.palferi.mergetool.spreadsheet.SpreadSheetEditor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -37,15 +38,17 @@ public class CustomerMaintenance {
 		Workbook newCustomers = new XSSFWorkbook();
 		Sheet newCustomersSheet = newCustomers.createSheet();
 
-		Map<Integer, Integer> pairs = RowMatcher.doStringContainsMatch(transfers, registrations, 8, 1);
-		pairs.putAll(RowMatcher.doStringContainsMatch(transfers, registrations, 11, 1));
+		Map<Integer, Integer> pairs = new HashMap<>();
+		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, 8, 1);
+		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, 11, 1);
 
 		Row newRow;
 		int rowNumber = 0;
 		for (Entry<Integer, Integer> pair : pairs.entrySet()) {
-			// System.out.println(set.getKey() + " - " + set.getValue());
-			newRow = newCustomersSheet.createRow(rowNumber++);
 
+			// System.out.println(set.getKey() + " - " + set.getValue());
+
+			newRow = newCustomersSheet.createRow(rowNumber++);
 			SpreadSheetEditor.copyRow(registrations.getRow(pair.getKey()), newRow, new int[][] {
 					{ 1, 0 }, { 3, 14 }, { 10, 2 }, { 11, 3 }, { 12, 4 }, { 13, 5 }, { 14, 6 } });
 		}
