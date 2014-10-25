@@ -1,8 +1,5 @@
 package hu.palferi.mergetool.spreadsheet;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -63,10 +60,10 @@ public class SpreadSheetEditor {
 		}
 	}
 
-	public static void copyRow(Row source, Row destination, Map<Integer, Integer> drift) {
-		for (int from : drift.keySet()) {
-			Cell cell = destination.createCell(drift.get(from));
-			copyCell(source.getCell(from), cell);
+	public static void copyRow(Row source, Row destination, int[][] drift) {
+		for (int[] itinerary : drift) {
+			Cell cell = destination.createCell(itinerary[1]);
+			copyCell(source.getCell(itinerary[0]), cell);
 		}
 	}
 
@@ -76,14 +73,5 @@ public class SpreadSheetEditor {
 			cell.setCellType(Cell.CELL_TYPE_STRING);
 			cell.setCellValue(value);
 		}
-	}
-
-	public static Map<Integer, Integer> createMap(int[][] pairs) {
-		HashMap<Integer, Integer> map = new HashMap<>();
-
-		for (int[] pair : pairs)
-			map.put(pair[0], pair[1]);
-
-		return map;
 	}
 }
