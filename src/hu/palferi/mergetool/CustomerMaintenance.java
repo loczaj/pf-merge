@@ -49,7 +49,7 @@ public class CustomerMaintenance {
 			// System.out.println(set.getKey() + " - " + set.getValue());
 
 			newRow = newCustomersSheet.createRow(rowNumber++);
-			SpreadSheetEditor.copyRow(registrations.getRow(pair.getKey()), newRow, new int[][] {
+			SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new int[][] {
 					{ 1, 0 }, { 3, 14 }, { 10, 2 }, { 11, 3 }, { 12, 4 }, { 13, 5 }, { 14, 6 } });
 		}
 
