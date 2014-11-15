@@ -9,7 +9,6 @@ public class InputFilesPanel extends JPanel {
 
 	public FileOpenPanel transferFilePanel;
 	public FileOpenPanel registerFilePanel;
-	public FileOpenPanel customerFilePanel;
 
 	public InputFilesPanel() {
 
@@ -20,10 +19,8 @@ public class InputFilesPanel extends JPanel {
 
 		transferFilePanel = new FileOpenPanel("Utalások", false);
 		registerFilePanel = new FileOpenPanel("Regisztációk", false);
-		customerFilePanel = new FileOpenPanel("Ügyféltörzs", false);
 
 		add(transferFilePanel);
 		add(registerFilePanel);
-		add(customerFilePanel);
 	}
 }

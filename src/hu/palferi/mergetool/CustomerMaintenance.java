@@ -24,16 +24,14 @@ public class CustomerMaintenance {
 
 	// private File customerFile;
 
-	public CustomerMaintenance(File transferFile, File registerFile, File customerFile) {
+	public CustomerMaintenance(File transferFile, File registerFile) {
 		this.transferFile = transferFile;
 		this.registerFile = registerFile;
-		// this.customerFile = customerFile;
 	}
 
 	public void run(File outputFile, int stricture) throws InvalidFormatException, IOException {
 		Sheet transfers = WorkbookFactory.create(transferFile).getSheetAt(0);
 		Sheet registrations = WorkbookFactory.create(registerFile).getSheetAt(0);
-		// Sheet customers = WorkbookFactory.create(customerFile).getSheetAt(0);
 
 		Workbook newCustomers = new XSSFWorkbook();
 		Sheet newCustomersSheet = newCustomers.createSheet();

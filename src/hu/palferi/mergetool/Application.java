@@ -45,15 +45,13 @@ public class Application extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (inputFilesPanel.transferFilePanel.canUseSelectedFile()
-				&& inputFilesPanel.registerFilePanel.canUseSelectedFile()
-				&& inputFilesPanel.customerFilePanel.canUseSelectedFile()) {
+				&& inputFilesPanel.registerFilePanel.canUseSelectedFile()) {
 			if (event.getSource() == customerPanel.startButton) {
 				// Customer Maintenance
 				if (customerPanel.outputFilePanel.canUseSelectedFile()) {
 					CustomerMaintenance maintenance = new CustomerMaintenance(
 							inputFilesPanel.transferFilePanel.getSelectedFile(),
-							inputFilesPanel.registerFilePanel.getSelectedFile(),
-							inputFilesPanel.customerFilePanel.getSelectedFile());
+							inputFilesPanel.registerFilePanel.getSelectedFile());
 
 					try {
 						maintenance.run(customerPanel.outputFilePanel.getSelectedFile(),
