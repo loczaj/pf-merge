@@ -62,8 +62,10 @@ public class SpreadSheetEditor {
 
 	public static void copyRow(Row source, Row destination, int[][] drift) {
 		for (int[] itinerary : drift) {
-			Cell cell = destination.createCell(itinerary[1]);
-			copyCell(source.getCell(itinerary[0]), cell);
+			if (source.getCell(itinerary[0]) != null) {
+				Cell cell = destination.createCell(itinerary[1]);
+				copyCell(source.getCell(itinerary[0]), cell);
+			}
 		}
 	}
 

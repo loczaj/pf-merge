@@ -24,6 +24,9 @@ public class RowMatcher {
 				Cell aCell = aRow.getCell(columnA);
 				Cell bCell = bRow.getCell(columnB);
 
+				if (aCell == null || bCell == null)
+					continue;
+
 				// Check type
 				if (aCell.getCellType() != Cell.CELL_TYPE_STRING)
 					continue;
