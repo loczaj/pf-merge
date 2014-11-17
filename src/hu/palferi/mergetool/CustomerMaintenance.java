@@ -37,8 +37,8 @@ public class CustomerMaintenance {
 		Sheet newCustomersSheet = newCustomers.createSheet();
 
 		Map<Integer, Integer> pairs = new HashMap<>();
-		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, 8, 1);
-		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, 11, 1);
+		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
+		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "L", "B");
 
 		Row newRow;
 		int rowNumber = 0;
@@ -47,12 +47,13 @@ public class CustomerMaintenance {
 			// System.out.println(set.getKey() + " - " + set.getValue());
 
 			newRow = newCustomersSheet.createRow(rowNumber++);
-			SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new int[][] {
-					{ 1, 0 }, { 3, 14 }, { 10, 2 }, { 11, 3 }, { 12, 4 }, { 13, 5 }, { 14, 6 } });
+			SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new String[][] {
+					{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" }, { "N", "F" },
+					{ "O", "G" } });
 		}
 
-		SpreadSheetEditor.fillColumn(newCustomersSheet, 11, "Magyarország");
-		SpreadSheetEditor.fillColumn(newCustomersSheet, 16, "Átutalás");
+		SpreadSheetEditor.fillColumn(newCustomersSheet, "L", "Magyarország");
+		SpreadSheetEditor.fillColumn(newCustomersSheet, "Q", "Átutalás");
 
 		// Write the output to a file
 		FileOutputStream outpuStream = new FileOutputStream(outputFile);

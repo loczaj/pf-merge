@@ -1,5 +1,6 @@
 package hu.palferi.mergetool.spreadsheet;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -60,18 +61,20 @@ public class SpreadSheetEditor {
 		}
 	}
 
-	public static void copyRow(Row source, Row destination, int[][] drift) {
-		for (int[] itinerary : drift) {
-			if (source.getCell(itinerary[0]) != null) {
-				Cell cell = destination.createCell(itinerary[1]);
-				copyCell(source.getCell(itinerary[0]), cell);
+	public static void copyRow(Row source, Row destination, String[][] drift) {
+		for (String[] itinerary : drift) {
+			int sourceColumn = CellReference.convertColStringToIndex(itinerary[0]);
+			int destinationColumn = CellReference.convertColStringToIndex(itinerary[1]);
+			if (source.getCell(sourceColumn) != null) {
+				Cell cell = destination.createCell(destinationColumn);
+				copyCell(source.getCell(sourceColumn), cell);
 			}
 		}
 	}
 
-	public static void fillColumn(Sheet sheet, int column, String value) {
+	public static void fillColumn(Sheet sheet, String column, String value) {
 		for (Row row : sheet) {
-			Cell cell = row.createCell(column);
+			Cell cell = row.createCell(CellReference.convertColStringToIndex(column));
 			cell.setCellType(Cell.CELL_TYPE_STRING);
 			cell.setCellValue(value);
 		}

@@ -2,14 +2,15 @@ package hu.palferi.mergetool.spreadsheet;
 
 import java.util.Map;
 
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 public class RowMatcher {
 
-	public static void doStringContainsMatch(Map<Integer, Integer> pairs, Sheet a, Sheet b, int columnA,
-			int columnB) {
+	public static void doStringContainsMatch(Map<Integer, Integer> pairs, Sheet a, Sheet b,
+			String columnA, String columnB) {
 
 		for (Row aRow : a) {
 
@@ -21,8 +22,8 @@ public class RowMatcher {
 				if (pairs.containsValue(bRow.getRowNum()))
 					continue;
 
-				Cell aCell = aRow.getCell(columnA);
-				Cell bCell = bRow.getCell(columnB);
+				Cell aCell = aRow.getCell(CellReference.convertColStringToIndex(columnA));
+				Cell bCell = bRow.getCell(CellReference.convertColStringToIndex(columnB));
 
 				if (aCell == null || bCell == null)
 					continue;
