@@ -16,8 +16,7 @@ import javax.swing.JSlider;
 public class BillingPanel extends JPanel {
 
 	public JButton startButton;
-	public FileOpenPanel customerFilePanel;
-	public FileOpenPanel billingFilePanel;
+	public IOFilesPanel outputFilesPanel;
 
 	private JSlider strictureSlider;
 
@@ -28,14 +27,9 @@ public class BillingPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentX(CENTER_ALIGNMENT);
 
-		customerFilePanel = new FileOpenPanel("Új ügyféltörzs", true);
-		//customerFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
-		add(customerFilePanel);
+		outputFilesPanel = new IOFilesPanel("Kimeneti fájlok", "Új ügyféltörzs", "Számla import", true);
+		add(outputFilesPanel);
 
-		billingFilePanel = new FileOpenPanel("Számla import", true);
-		//billingFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
-		add(billingFilePanel);
-		
 		Dictionary<Integer, JLabel> strictureLevels = new Hashtable<>();
 		strictureLevels.put(1, new JLabel("laza"));
 		strictureLevels.put(3, new JLabel("közepes"));
