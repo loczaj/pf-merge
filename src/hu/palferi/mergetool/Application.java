@@ -1,7 +1,7 @@
 package hu.palferi.mergetool;
 
-import hu.palferi.mergetool.ui.CustomerMaintenancePanel;
-import hu.palferi.mergetool.ui.InputFilesPanel;
+import hu.palferi.mergetool.ui.BillingPanel;
+import hu.palferi.mergetool.ui.IOFilesPanel;
 import hu.palferi.mergetool.ui.PreviewPanel;
 
 import java.awt.event.ActionEvent;
@@ -20,42 +20,41 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 @SuppressWarnings("serial")
 public class Application extends JPanel implements ActionListener {
 
-	private InputFilesPanel inputFilesPanel;
-	private CustomerMaintenancePanel customerPanel;
+	private IOFilesPanel inputFilesPanel;
+	private BillingPanel billingPanel;
 
 	public Application() {
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		inputFilesPanel = new InputFilesPanel();
+		inputFilesPanel = new IOFilesPanel("Bemeneti fájlok", "Utalások", "Regisztációk", false);
 		add(inputFilesPanel);
 
-		customerPanel = new CustomerMaintenancePanel();
-		customerPanel.startButton.addActionListener(this);
+		billingPanel = new BillingPanel();
+		billingPanel.startButton.addActionListener(this);
 
 		PreviewPanel previewPanel = new PreviewPanel();
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Ügyféltörzs karbantartás", customerPanel);
-		tabbedPane.addTab("Számla import készítés", null);
+		tabbedPane.addTab("Számla import készítés", billingPanel);
 		tabbedPane.addTab("Előnézet", previewPanel);
 		add(tabbedPane);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		if (inputFilesPanel.transferFilePanel.canUseSelectedFile()
-				&& inputFilesPanel.registerFilePanel.canUseSelectedFile()) {
-			if (event.getSource() == customerPanel.startButton) {
+		if (inputFilesPanel.upperFilePanel.canUseSelectedFile()
+				&& inputFilesPanel.lowerFilePanel.canUseSelectedFile()) {
+			if (event.getSource() == billingPanel.startButton) {
 				// Customer Maintenance
-				if (customerPanel.outputFilePanel.canUseSelectedFile()) {
+				if (billingPanel.customerFilePanel.canUseSelectedFile()) {
 					CustomerMaintenance maintenance = new CustomerMaintenance(
-							inputFilesPanel.transferFilePanel.getSelectedFile(),
-							inputFilesPanel.registerFilePanel.getSelectedFile());
+							inputFilesPanel.upperFilePanel.getSelectedFile(),
+							inputFilesPanel.lowerFilePanel.getSelectedFile());
 
 					try {
-						maintenance.run(customerPanel.outputFilePanel.getSelectedFile(),
-								customerPanel.getStricture());
+						maintenance.run(billingPanel.customerFilePanel.getSelectedFile(),
+								billingPanel.getStricture());
 
 					} catch (InvalidFormatException | IOException ex) {
 						ex.printStackTrace();

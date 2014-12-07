@@ -13,24 +13,29 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 @SuppressWarnings("serial")
-public class CustomerMaintenancePanel extends JPanel {
+public class BillingPanel extends JPanel {
 
 	public JButton startButton;
-	public FileOpenPanel outputFilePanel;
+	public FileOpenPanel customerFilePanel;
+	public FileOpenPanel billingFilePanel;
 
 	private JSlider strictureSlider;
 
-	public CustomerMaintenancePanel() {
+	public BillingPanel() {
 		// TODO Auto-generated constructor stub
 
 		setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentX(CENTER_ALIGNMENT);
 
-		outputFilePanel = new FileOpenPanel("Új ügyféltörzs", true);
-		outputFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
-		add(outputFilePanel);
+		customerFilePanel = new FileOpenPanel("Új ügyféltörzs", true);
+		//customerFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
+		add(customerFilePanel);
 
+		billingFilePanel = new FileOpenPanel("Számla import", true);
+		//billingFilePanel.setBorder(BorderFactory.createEmptyBorder(25, 15, 25, 15));
+		add(billingFilePanel);
+		
 		Dictionary<Integer, JLabel> strictureLevels = new Hashtable<>();
 		strictureLevels.put(1, new JLabel("laza"));
 		strictureLevels.put(3, new JLabel("közepes"));
