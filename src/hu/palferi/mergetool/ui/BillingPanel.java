@@ -1,16 +1,22 @@
 package hu.palferi.mergetool.ui;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.text.NumberFormat;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.text.PlainDocument;
 
 @SuppressWarnings("serial")
 public class BillingPanel extends JPanel {
@@ -19,9 +25,13 @@ public class BillingPanel extends JPanel {
 	public IOFilesPanel outputFilesPanel;
 
 	private JSlider strictureSlider;
+	private Preferences preferences;
+	private JFormattedTextField priceField;
+	private JTextField customerIdPrefixField;
 
 	public BillingPanel() {
-		// TODO Auto-generated constructor stub
+
+		this.preferences = Preferences.userRoot().node(this.getClass().getName());
 
 		setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -29,6 +39,28 @@ public class BillingPanel extends JPanel {
 
 		outputFilesPanel = new IOFilesPanel("Kimeneti fájlok", "Új ügyféltörzs", "Számla import", true);
 		add(outputFilesPanel);
+
+		JPanel parameterPanel = new JPanel();
+		parameterPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Paraméterek"),
+				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+		add(parameterPanel);
+
+		parameterPanel.add(new JLabel("Ügyfél kód prefix"));
+		customerIdPrefixField = new JTextField(4);
+		customerIdPrefixField.setText(preferences.get("customerIdPrefix", ""));
+		PlainDocument prefixDocument = (PlainDocument) customerIdPrefixField.getDocument();
+		prefixDocument.setDocumentFilter(new DocumentSizeFilter(4));
+		parameterPanel.add(customerIdPrefixField);
+		parameterPanel.add(Box.createRigidArea(new Dimension(70, 0)));
+
+		parameterPanel.add(new JLabel("Egységár"));
+		NumberFormat priceFormat = NumberFormat.getNumberInstance();
+		priceFormat.setMaximumIntegerDigits(5);
+		priceField = new JFormattedTextField(priceFormat);
+		priceField.setValue(preferences.getInt("price", 1000));
+		priceField.setColumns(4);
+		parameterPanel.add(priceField);
 
 		Dictionary<Integer, JLabel> strictureLevels = new Hashtable<>();
 		strictureLevels.put(1, new JLabel("laza"));
@@ -48,6 +80,17 @@ public class BillingPanel extends JPanel {
 		startButton.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		add(Box.createVerticalStrut(10));
 		add(startButton);
+	}
+
+	public String getCustomerIdPrefix() {
+		preferences.put("customerIdPrefix", customerIdPrefixField.getText());
+		return customerIdPrefixField.getText();
+	}
+
+	public int getPrice() {
+		int price = ((Number) priceField.getValue()).intValue();
+		preferences.putInt("price", price);
+		return price;
 	}
 
 	public int getStricture() {
