@@ -1,7 +1,6 @@
 package hu.palferi.mergetool.ui;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.text.NumberFormat;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -37,7 +36,7 @@ public class BillingPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentX(CENTER_ALIGNMENT);
 
-		outputFilesPanel = new IOFilesPanel("Kimeneti fájlok", "Új ügyféltörzs", "Számla import", true);
+		outputFilesPanel = new IOFilesPanel("Kimeneti fájlok", "Ügyféltörzs", "Számla import", true);
 		add(outputFilesPanel);
 
 		JPanel parameterPanel = new JPanel();
@@ -52,7 +51,7 @@ public class BillingPanel extends JPanel {
 		PlainDocument prefixDocument = (PlainDocument) customerIdPrefixField.getDocument();
 		prefixDocument.setDocumentFilter(new DocumentSizeFilter(4));
 		parameterPanel.add(customerIdPrefixField);
-		parameterPanel.add(Box.createRigidArea(new Dimension(70, 0)));
+		parameterPanel.add(Box.createHorizontalStrut(70));
 
 		parameterPanel.add(new JLabel("Egységár"));
 		NumberFormat priceFormat = NumberFormat.getNumberInstance();
