@@ -49,7 +49,7 @@ public class BillingPanel extends JPanel {
 		customerIdPrefixField = new JTextField(4);
 		customerIdPrefixField.setText(preferences.get("customerIdPrefix", ""));
 		PlainDocument prefixDocument = (PlainDocument) customerIdPrefixField.getDocument();
-		prefixDocument.setDocumentFilter(new DocumentSizeFilter(4));
+		prefixDocument.setDocumentFilter(new DocumentSizeFilter(3));
 		parameterPanel.add(customerIdPrefixField);
 		parameterPanel.add(Box.createHorizontalStrut(70));
 
