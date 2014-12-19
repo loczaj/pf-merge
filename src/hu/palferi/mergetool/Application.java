@@ -4,6 +4,7 @@ import hu.palferi.mergetool.ui.BillingPanel;
 import hu.palferi.mergetool.ui.IOFilesPanel;
 import hu.palferi.mergetool.ui.PreviewPanel;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -84,6 +85,7 @@ public class Application extends JPanel implements ActionListener {
 					frame.setContentPane(contentPane);
 					frame.pack();
 					frame.setLocationRelativeTo(null);
+					frame.setMinimumSize(new Dimension(725, 565));
 					frame.setVisible(true);
 
 				} catch (Throwable e) {
