@@ -17,14 +17,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class CustomerMaintenance {
+public class BillingOperation {
 
 	private File transferFile;
 	private File registerFile;
 
 	// private File customerFile;
 
-	public CustomerMaintenance(File transferFile, File registerFile) {
+	public BillingOperation(File transferFile, File registerFile) {
 		this.transferFile = transferFile;
 		this.registerFile = registerFile;
 	}
