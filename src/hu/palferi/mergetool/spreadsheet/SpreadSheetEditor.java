@@ -9,6 +9,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class SpreadSheetEditor {
 
+	public static Cell createStringCell(Row row, String column, String value) {
+		Cell newCell = row.createCell(CellReference.convertColStringToIndex(column));
+		newCell.setCellType(Cell.CELL_TYPE_STRING);
+		newCell.setCellValue(value);
+		return newCell;
+	}
+
 	public static void copyCell(Cell source, Cell destination) {
 
 		// If the old cell is null jump to next cell

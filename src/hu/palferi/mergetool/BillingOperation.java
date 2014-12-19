@@ -21,15 +21,22 @@ public class BillingOperation {
 
 	private File transferFile;
 	private File registerFile;
+	private String customerCodePrefix;
+
+	// private int unitPrice;
 
 	// private File customerFile;
 
-	public BillingOperation(File transferFile, File registerFile) {
+	public BillingOperation(File transferFile, File registerFile, String customerCodePrefix,
+			int unitPrice) {
 		this.transferFile = transferFile;
 		this.registerFile = registerFile;
+		this.customerCodePrefix = customerCodePrefix;
+		// this.unitPrice = unitPrice;
 	}
 
-	public void run(File outputFile, int stricture) throws InvalidFormatException, IOException {
+	public void run(File customerOutputFile, File billingOutputFile, int stricture)
+			throws InvalidFormatException, IOException {
 		Sheet transfers = WorkbookFactory.create(transferFile).getSheetAt(0);
 		Sheet registrations = WorkbookFactory.create(registerFile).getSheetAt(0);
 
@@ -47,6 +54,8 @@ public class BillingOperation {
 			// System.out.println(set.getKey() + " - " + set.getValue());
 
 			newRow = newCustomersSheet.createRow(rowNumber++);
+			String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber);
+			SpreadSheetEditor.createStringCell(newRow, "B", customerCode);
 			SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new String[][] {
 					{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" }, { "N", "F" },
 					{ "O", "G" } });
@@ -56,7 +65,7 @@ public class BillingOperation {
 		SpreadSheetEditor.fillColumn(newCustomersSheet, "Q", "Átutalás");
 
 		// Write the output to a file
-		FileOutputStream outpuStream = new FileOutputStream(outputFile);
+		FileOutputStream outpuStream = new FileOutputStream(customerOutputFile);
 		newCustomers.write(outpuStream);
 		outpuStream.close();
 	}

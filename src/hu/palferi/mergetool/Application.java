@@ -51,10 +51,12 @@ public class Application extends JPanel implements ActionListener {
 				if (billingPanel.outputFilesPanel.upperFilePanel.canUseSelectedFile()) {
 					BillingOperation billing = new BillingOperation(
 							inputFilesPanel.upperFilePanel.getSelectedFile(),
-							inputFilesPanel.lowerFilePanel.getSelectedFile());
+							inputFilesPanel.lowerFilePanel.getSelectedFile(),
+							billingPanel.getCustomerCodePrefix(), billingPanel.getUnitPrice());
 
 					try {
 						billing.run(billingPanel.outputFilesPanel.upperFilePanel.getSelectedFile(),
+								billingPanel.outputFilesPanel.lowerFilePanel.getSelectedFile(),
 								billingPanel.getStricture());
 
 					} catch (InvalidFormatException | IOException ex) {

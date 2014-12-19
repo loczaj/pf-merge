@@ -27,8 +27,8 @@ public class BillingPanel extends JPanel {
 
 	private JSlider strictureSlider;
 	private Preferences preferences;
-	private JFormattedTextField priceField;
-	private JTextField customerIdPrefixField;
+	private JFormattedTextField unitPriceField;
+	private JTextField customerCodePrefixField;
 
 	public BillingPanel() {
 
@@ -54,20 +54,20 @@ public class BillingPanel extends JPanel {
 		add(parameterPanel, gbc);
 
 		parameterPanel.add(new JLabel("Ügyfél kód prefix"));
-		customerIdPrefixField = new JTextField(4);
-		customerIdPrefixField.setText(preferences.get("customerIdPrefix", ""));
-		PlainDocument prefixDocument = (PlainDocument) customerIdPrefixField.getDocument();
+		customerCodePrefixField = new JTextField(4);
+		customerCodePrefixField.setText(preferences.get("customerCodePrefix", ""));
+		PlainDocument prefixDocument = (PlainDocument) customerCodePrefixField.getDocument();
 		prefixDocument.setDocumentFilter(new DocumentSizeFilter(3));
-		parameterPanel.add(customerIdPrefixField);
+		parameterPanel.add(customerCodePrefixField);
 		parameterPanel.add(Box.createHorizontalStrut(70));
 
 		parameterPanel.add(new JLabel("Egységár"));
 		NumberFormat priceFormat = NumberFormat.getNumberInstance();
 		priceFormat.setMaximumIntegerDigits(5);
-		priceField = new JFormattedTextField(priceFormat);
-		priceField.setValue(preferences.getInt("price", 1000));
-		priceField.setColumns(4);
-		parameterPanel.add(priceField);
+		unitPriceField = new JFormattedTextField(priceFormat);
+		unitPriceField.setValue(preferences.getInt("unitPrice", 1000));
+		unitPriceField.setColumns(4);
+		parameterPanel.add(unitPriceField);
 
 		Dictionary<Integer, JLabel> strictureLevels = new Hashtable<>();
 		strictureLevels.put(1, new JLabel("laza"));
@@ -101,14 +101,14 @@ public class BillingPanel extends JPanel {
 		add(startButton, gbc);
 	}
 
-	public String getCustomerIdPrefix() {
-		preferences.put("customerIdPrefix", customerIdPrefixField.getText());
-		return customerIdPrefixField.getText();
+	public String getCustomerCodePrefix() {
+		preferences.put("customerCodePrefix", customerCodePrefixField.getText());
+		return customerCodePrefixField.getText();
 	}
 
-	public int getPrice() {
-		int price = ((Number) priceField.getValue()).intValue();
-		preferences.putInt("price", price);
+	public int getUnitPrice() {
+		int price = ((Number) unitPriceField.getValue()).intValue();
+		preferences.putInt("unitPrice", price);
 		return price;
 	}
 
