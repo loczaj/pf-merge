@@ -40,8 +40,11 @@ public class BillingOperation {
 		Sheet transfers = WorkbookFactory.create(transferFile).getSheetAt(0);
 		Sheet registrations = WorkbookFactory.create(registerFile).getSheetAt(0);
 
-		Workbook newCustomers = new XSSFWorkbook();
-		Sheet newCustomersSheet = newCustomers.createSheet();
+		Workbook customerBook = new XSSFWorkbook();
+		Sheet customerSheet = customerBook.createSheet();
+
+		Workbook billingBook = new XSSFWorkbook();
+		// Sheet billingSheet = billingBook.createSheet();
 
 		Map<Integer, Integer> pairs = new HashMap<>();
 		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
@@ -53,7 +56,7 @@ public class BillingOperation {
 
 			// System.out.println(set.getKey() + " - " + set.getValue());
 
-			newRow = newCustomersSheet.createRow(rowNumber++);
+			newRow = customerSheet.createRow(rowNumber++);
 			String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber);
 			SpreadSheetEditor.createStringCell(newRow, "B", customerCode);
 			SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new String[][] {
@@ -61,12 +64,16 @@ public class BillingOperation {
 					{ "O", "G" } });
 		}
 
-		SpreadSheetEditor.fillColumn(newCustomersSheet, "L", "Magyarország");
-		SpreadSheetEditor.fillColumn(newCustomersSheet, "Q", "Átutalás");
+		SpreadSheetEditor.fillColumn(customerSheet, "L", "Magyarország");
+		SpreadSheetEditor.fillColumn(customerSheet, "Q", "Átutalás");
 
-		// Write the output to a file
-		FileOutputStream outpuStream = new FileOutputStream(customerOutputFile);
-		newCustomers.write(outpuStream);
-		outpuStream.close();
+		// Write output to files
+		FileOutputStream customerOutputStream = new FileOutputStream(customerOutputFile);
+		customerBook.write(customerOutputStream);
+		customerOutputStream.close();
+
+		FileOutputStream billingOutputStream = new FileOutputStream(billingOutputFile);
+		billingBook.write(billingOutputStream);
+		billingOutputStream.close();
 	}
 }

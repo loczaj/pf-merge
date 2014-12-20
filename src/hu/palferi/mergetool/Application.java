@@ -48,7 +48,8 @@ public class Application extends JPanel implements ActionListener {
 				&& inputFilesPanel.lowerFilePanel.canUseSelectedFile()) {
 			if (event.getSource() == billingPanel.startButton) {
 				// Billing operation
-				if (billingPanel.outputFilesPanel.upperFilePanel.canUseSelectedFile()) {
+				if (billingPanel.outputFilesPanel.upperFilePanel.canUseSelectedFile()
+						&& billingPanel.outputFilesPanel.lowerFilePanel.canUseSelectedFile()) {
 					BillingOperation billing = new BillingOperation(
 							inputFilesPanel.upperFilePanel.getSelectedFile(),
 							inputFilesPanel.lowerFilePanel.getSelectedFile(),
