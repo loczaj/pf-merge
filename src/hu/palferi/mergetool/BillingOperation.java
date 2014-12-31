@@ -37,21 +37,23 @@ public class BillingOperation {
 			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
 			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "L", "B");
 
-			Row customerRow, billingRow;
+			Row transferRow, registrationRow, customerRow, billingRow;
 			int rowNumber = 0;
 			for (Entry<Integer, Integer> pair : pairs.entrySet()) {
 
 				// System.out.println(set.getKey() + " - " + set.getValue());
 
+				transferRow = transfers.getRow(pair.getKey());
+				registrationRow = registrations.getRow(pair.getValue());
 				customerRow = customerSheet.createRow(rowNumber);
 				billingRow = billingSheet.createRow(rowNumber);
 
 				// Customer book
 				String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber + 1);
 				SpreadSheetEditor.createCell(customerRow, "B", customerCode);
-				SpreadSheetEditor.realignCells(registrations.getRow(pair.getValue()), customerRow,
-						new String[][] { { "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" },
-								{ "M", "E" }, { "N", "F" }, { "O", "G" } });
+				SpreadSheetEditor.realignCells(registrationRow, customerRow, new String[][] {
+						{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" },
+						{ "N", "F" }, { "O", "G" } });
 
 				// Billing book
 				SpreadSheetEditor.createCell(billingRow, "A", rowNumber + 1);
@@ -60,6 +62,17 @@ public class BillingOperation {
 						"G" });
 				SpreadSheetEditor.realignCells(customerRow, billingRow, new String[][] { { "A", "E" },
 						{ "C", "F" }, { "D", "G" } });
+				SpreadSheetEditor.realignCells(transferRow, billingRow, new String[][] { { "C", "L" },
+						{ "C", "M" } });
+
+				int amount = (int) SpreadSheetEditor.getNumericCellValue(transferRow, "J");
+				SpreadSheetEditor.createCell(billingRow, "O", amount / unitPrice);
+				SpreadSheetEditor.createCell(billingRow, "Q", unitPrice);
+
+				if (amount % unitPrice != 0) {
+					SpreadSheetEditor.createCell(billingRow, "V",
+							String.format("Túlfizetés: %d Forint", amount % unitPrice));
+				}
 
 				rowNumber++;
 			}
@@ -69,6 +82,11 @@ public class BillingOperation {
 
 			SpreadSheetEditor.fillColumn(billingSheet, "B", "HUF");
 			SpreadSheetEditor.fillColumn(billingSheet, "C", 1);
+			SpreadSheetEditor.fillColumn(billingSheet, "J", "Átutalás");
+			SpreadSheetEditor.fillColumn(billingSheet, "P", "db");
+			SpreadSheetEditor.fillColumn(billingSheet, "R",
+					"A számla közvetített szolgáltatást tartalmaz.");
+			SpreadSheetEditor.fillColumn(billingSheet, "S", "27%");
 
 			// Write output to files
 			customerBook.write(customerOutputStream);

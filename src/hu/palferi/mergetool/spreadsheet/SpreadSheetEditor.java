@@ -128,4 +128,12 @@ public class SpreadSheetEditor {
 			cell.setCellValue(value);
 		}
 	}
+
+	public static double getNumericCellValue(Row row, String column) {
+		Cell cell = row.getCell(CellReference.convertColStringToIndex(column));
+		if (cell != null && cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
+			return cell.getNumericCellValue();
+		else
+			return 0;
+	}
 }
