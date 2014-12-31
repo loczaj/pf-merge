@@ -19,23 +19,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class BillingOperation {
 
-	private File transferFile;
-	private File registerFile;
-	private String customerCodePrefix;
-
-	// private int unitPrice;
-
-	// private File customerFile;
-
-	public BillingOperation(File transferFile, File registerFile, String customerCodePrefix,
-			int unitPrice) {
-		this.transferFile = transferFile;
-		this.registerFile = registerFile;
-		this.customerCodePrefix = customerCodePrefix;
-		// this.unitPrice = unitPrice;
-	}
-
-	public void run(File customerOutputFile, File billingOutputFile, int stricture)
+	public void run(File transferFile, File registerFile, File customerOutputFile,
+			File billingOutputFile, String customerCodePrefix, int unitPrice, int stricture)
 			throws InvalidFormatException, IOException {
 		Sheet transfers = WorkbookFactory.create(transferFile).getSheetAt(0);
 		Sheet registrations = WorkbookFactory.create(registerFile).getSheetAt(0);
