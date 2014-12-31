@@ -74,14 +74,42 @@ public class SpreadSheetEditor {
 		}
 	}
 
-	public static void copyRow(Row source, Row destination, String[][] drift) {
-		for (String[] itinerary : drift) {
-			int sourceColumn = CellReference.convertColStringToIndex(itinerary[0]);
-			int destinationColumn = CellReference.convertColStringToIndex(itinerary[1]);
+	public static void realignCells(Row source, Row destination, String[][] alignment) {
+		for (String[] drift : alignment) {
+			int sourceColumn = CellReference.convertColStringToIndex(drift[0]);
+			int destinationColumn = CellReference.convertColStringToIndex(drift[1]);
 			if (source.getCell(sourceColumn) != null) {
 				Cell cell = destination.createCell(destinationColumn);
 				copyCell(source.getCell(sourceColumn), cell);
 			}
+		}
+	}
+
+	public static void contractCells(Row source, Row destination, String destinationColumn,
+			String[] sourceColumns) {
+		String value = new String();
+		for (String sourceCulumn : sourceColumns) {
+			Cell sourceCell = source.getCell(CellReference.convertColStringToIndex(sourceCulumn));
+			if (sourceCell != null) {
+				switch (sourceCell.getCellType()) {
+				case Cell.CELL_TYPE_NUMERIC:
+					value += (int) sourceCell.getNumericCellValue();
+					value += ".";
+					break;
+				case Cell.CELL_TYPE_STRING:
+					value += sourceCell.getStringCellValue();
+					break;
+				default:
+				}
+
+				value += " ";
+			}
+		}
+
+		if (!value.isEmpty()) {
+			Cell cell = destination.createCell(CellReference.convertColStringToIndex(destinationColumn));
+			cell.setCellType(Cell.CELL_TYPE_STRING);
+			cell.setCellValue(value.substring(0, value.length() - 1));
 		}
 	}
 

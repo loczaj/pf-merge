@@ -49,14 +49,16 @@ public class BillingOperation {
 				// Customer book
 				String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber + 1);
 				SpreadSheetEditor.createCell(customerRow, "B", customerCode);
-				SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), customerRow,
+				SpreadSheetEditor.realignCells(registrations.getRow(pair.getValue()), customerRow,
 						new String[][] { { "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" },
 								{ "M", "E" }, { "N", "F" }, { "O", "G" } });
 
 				// Billing book
 				SpreadSheetEditor.createCell(billingRow, "A", rowNumber + 1);
 				SpreadSheetEditor.createCell(billingRow, "D", customerCode);
-				SpreadSheetEditor.copyRow(customerRow, billingRow, new String[][] { { "A", "E" },
+				SpreadSheetEditor.contractCells(customerRow, billingRow, "H", new String[] { "E", "F",
+						"G" });
+				SpreadSheetEditor.realignCells(customerRow, billingRow, new String[][] { { "A", "E" },
 						{ "C", "F" }, { "D", "G" } });
 
 				rowNumber++;
