@@ -25,40 +25,38 @@ public class BillingOperation {
 		Sheet transfers = WorkbookFactory.create(transferFile).getSheetAt(0);
 		Sheet registrations = WorkbookFactory.create(registerFile).getSheetAt(0);
 
-		Workbook customerBook = new XSSFWorkbook();
-		Sheet customerSheet = customerBook.createSheet();
+		try (FileOutputStream customerOutputStream = new FileOutputStream(customerOutputFile);
+				FileOutputStream billingOutputStream = new FileOutputStream(billingOutputFile);
+				Workbook customerBook = new XSSFWorkbook();
+				Workbook billingBook = new XSSFWorkbook()) {
 
-		Workbook billingBook = new XSSFWorkbook();
-		// Sheet billingSheet = billingBook.createSheet();
+			Sheet customerSheet = customerBook.createSheet();
+			// Sheet billingSheet = billingBook.createSheet();
 
-		Map<Integer, Integer> pairs = new HashMap<>();
-		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
-		RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "L", "B");
+			Map<Integer, Integer> pairs = new HashMap<>();
+			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
+			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "L", "B");
 
-		Row newRow;
-		int rowNumber = 0;
-		for (Entry<Integer, Integer> pair : pairs.entrySet()) {
+			Row newRow;
+			int rowNumber = 0;
+			for (Entry<Integer, Integer> pair : pairs.entrySet()) {
 
-			// System.out.println(set.getKey() + " - " + set.getValue());
+				// System.out.println(set.getKey() + " - " + set.getValue());
 
-			newRow = customerSheet.createRow(rowNumber++);
-			String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber);
-			SpreadSheetEditor.createStringCell(newRow, "B", customerCode);
-			SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new String[][] {
-					{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" }, { "N", "F" },
-					{ "O", "G" } });
+				newRow = customerSheet.createRow(rowNumber++);
+				String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber);
+				SpreadSheetEditor.createStringCell(newRow, "B", customerCode);
+				SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new String[][] {
+						{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" },
+						{ "N", "F" }, { "O", "G" } });
+			}
+
+			SpreadSheetEditor.fillColumn(customerSheet, "L", "Magyarország");
+			SpreadSheetEditor.fillColumn(customerSheet, "Q", "Átutalás");
+
+			// Write output to files
+			customerBook.write(customerOutputStream);
+			billingBook.write(billingOutputStream);
 		}
-
-		SpreadSheetEditor.fillColumn(customerSheet, "L", "Magyarország");
-		SpreadSheetEditor.fillColumn(customerSheet, "Q", "Átutalás");
-
-		// Write output to files
-		FileOutputStream customerOutputStream = new FileOutputStream(customerOutputFile);
-		customerBook.write(customerOutputStream);
-		customerOutputStream.close();
-
-		FileOutputStream billingOutputStream = new FileOutputStream(billingOutputFile);
-		billingBook.write(billingOutputStream);
-		billingOutputStream.close();
 	}
 }
