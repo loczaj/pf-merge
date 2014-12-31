@@ -2,7 +2,6 @@ package hu.palferi.mergetool.spreadsheet;
 
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -25,9 +24,9 @@ public class SpreadSheetEditor {
 		}
 
 		// Copy style from old cell and apply to new cell
-		CellStyle style = destination.getSheet().getWorkbook().createCellStyle();
-		style.cloneStyleFrom(source.getCellStyle());
-		destination.setCellStyle(style);
+		// CellStyle style = destination.getSheet().getWorkbook().createCellStyle();
+		// style.cloneStyleFrom(source.getCellStyle());
+		// destination.setCellStyle(style);
 
 		// If there is a cell comment, copy
 		// if (oldCell.getCellComment() != null) {
