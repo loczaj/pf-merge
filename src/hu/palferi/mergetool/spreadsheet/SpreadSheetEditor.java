@@ -8,9 +8,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public class SpreadSheetEditor {
 
-	public static Cell createStringCell(Row row, String column, String value) {
+	public static Cell createCell(Row row, String column, String value) {
 		Cell newCell = row.createCell(CellReference.convertColStringToIndex(column));
 		newCell.setCellType(Cell.CELL_TYPE_STRING);
+		newCell.setCellValue(value);
+		return newCell;
+	}
+
+	public static Cell createCell(Row row, String column, int value) {
+		Cell newCell = row.createCell(CellReference.convertColStringToIndex(column));
+		newCell.setCellType(Cell.CELL_TYPE_NUMERIC);
 		newCell.setCellValue(value);
 		return newCell;
 	}
@@ -82,6 +89,14 @@ public class SpreadSheetEditor {
 		for (Row row : sheet) {
 			Cell cell = row.createCell(CellReference.convertColStringToIndex(column));
 			cell.setCellType(Cell.CELL_TYPE_STRING);
+			cell.setCellValue(value);
+		}
+	}
+
+	public static void fillColumn(Sheet sheet, String column, int value) {
+		for (Row row : sheet) {
+			Cell cell = row.createCell(CellReference.convertColStringToIndex(column));
+			cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 			cell.setCellValue(value);
 		}
 	}

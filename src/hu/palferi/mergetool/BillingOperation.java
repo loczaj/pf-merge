@@ -31,28 +31,42 @@ public class BillingOperation {
 				Workbook billingBook = new XSSFWorkbook()) {
 
 			Sheet customerSheet = customerBook.createSheet();
-			// Sheet billingSheet = billingBook.createSheet();
+			Sheet billingSheet = billingBook.createSheet();
 
 			Map<Integer, Integer> pairs = new HashMap<>();
 			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
 			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "L", "B");
 
-			Row newRow;
+			Row customerRow, billingRow;
 			int rowNumber = 0;
 			for (Entry<Integer, Integer> pair : pairs.entrySet()) {
 
 				// System.out.println(set.getKey() + " - " + set.getValue());
 
-				newRow = customerSheet.createRow(rowNumber++);
-				String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber);
-				SpreadSheetEditor.createStringCell(newRow, "B", customerCode);
-				SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), newRow, new String[][] {
-						{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" },
-						{ "N", "F" }, { "O", "G" } });
+				customerRow = customerSheet.createRow(rowNumber);
+				billingRow = billingSheet.createRow(rowNumber);
+
+				// Customer book
+				String customerCode = String.format("%s%03d", customerCodePrefix, rowNumber + 1);
+				SpreadSheetEditor.createCell(customerRow, "B", customerCode);
+				SpreadSheetEditor.copyRow(registrations.getRow(pair.getValue()), customerRow,
+						new String[][] { { "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" },
+								{ "M", "E" }, { "N", "F" }, { "O", "G" } });
+
+				// Billing book
+				SpreadSheetEditor.createCell(billingRow, "A", rowNumber + 1);
+				SpreadSheetEditor.createCell(billingRow, "D", customerCode);
+				SpreadSheetEditor.copyRow(customerRow, billingRow, new String[][] { { "A", "E" },
+						{ "C", "F" }, { "D", "G" } });
+
+				rowNumber++;
 			}
 
 			SpreadSheetEditor.fillColumn(customerSheet, "L", "Magyarország");
 			SpreadSheetEditor.fillColumn(customerSheet, "Q", "Átutalás");
+
+			SpreadSheetEditor.fillColumn(billingSheet, "B", "HUF");
+			SpreadSheetEditor.fillColumn(billingSheet, "C", 1);
 
 			// Write output to files
 			customerBook.write(customerOutputStream);
