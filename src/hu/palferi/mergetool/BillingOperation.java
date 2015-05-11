@@ -1,14 +1,17 @@
 package hu.palferi.mergetool;
 
-import hu.palferi.mergetool.spreadsheet.RowMatcher;
 import hu.palferi.mergetool.spreadsheet.SpreadSheetEditor;
+import hu.palferi.mergetool.text.ListConverter;
+import hu.palferi.mergetool.text.ListMatcher;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,8 +25,8 @@ public class BillingOperation {
 	public void run(File transferFile, File registerFile, File customerOutputFile,
 			File billingOutputFile, String customerCodePrefix, int unitPrice, int stricture)
 			throws InvalidFormatException, IOException {
-		Sheet transfers = WorkbookFactory.create(transferFile).getSheetAt(0);
-		Sheet registrations = WorkbookFactory.create(registerFile).getSheetAt(0);
+		Sheet transferSheet = WorkbookFactory.create(transferFile).getSheetAt(0);
+		Sheet registrationSheet = WorkbookFactory.create(registerFile).getSheetAt(0);
 
 		try (FileOutputStream customerOutputStream = new FileOutputStream(customerOutputFile);
 				FileOutputStream billingOutputStream = new FileOutputStream(billingOutputFile);
@@ -34,8 +37,20 @@ public class BillingOperation {
 			Sheet billingSheet = billingBook.createSheet();
 
 			Map<Integer, Integer> pairs = new HashMap<>();
-			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "I", "B");
-			RowMatcher.doStringContainsMatch(pairs, transfers, registrations, "L", "B");
+			List<String> partners = SpreadSheetEditor.readColumn(transferSheet, "I");
+			List<String> messages = SpreadSheetEditor.readColumn(transferSheet, "L");
+			List<String> registeredNames = SpreadSheetEditor.readColumn(registrationSheet, "B");
+
+			Function<String, String> cleanString = str -> str.replaceAll("\\s+", "").toLowerCase();
+			partners = ListConverter.convert(partners, cleanString);
+			messages = ListConverter.convert(messages, cleanString);
+			registeredNames = ListConverter.convert(registeredNames, cleanString);
+
+			ListMatcher.doContainsMatch(pairs, partners, registeredNames);
+			ListMatcher.doContainsMatch(pairs, messages, registeredNames);
+
+			// RowMatcher.doStringContainsMatch(pairs, transferSheet, registrationSheet, "I", "B");
+			// RowMatcher.doStringContainsMatch(pairs, transferSheet, registrationSheet, "L", "B");
 
 			Row transferRow, registrationRow, customerRow, billingRow;
 			int rowNumber = 0;
@@ -43,8 +58,8 @@ public class BillingOperation {
 
 				// System.out.println(set.getKey() + " - " + set.getValue());
 
-				transferRow = transfers.getRow(pair.getKey());
-				registrationRow = registrations.getRow(pair.getValue());
+				transferRow = transferSheet.getRow(pair.getKey());
+				registrationRow = registrationSheet.getRow(pair.getValue());
 				customerRow = customerSheet.createRow(rowNumber);
 				billingRow = billingSheet.createRow(rowNumber);
 
