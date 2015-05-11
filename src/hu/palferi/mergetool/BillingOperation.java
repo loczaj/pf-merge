@@ -67,7 +67,7 @@ public class BillingOperation {
 
 				int amount = (int) SpreadSheetEditor.getNumericCellValue(transferRow, "J");
 				SpreadSheetEditor.createCell(billingRow, "O", amount / unitPrice);
-				SpreadSheetEditor.createCell(billingRow, "Q", unitPrice);
+				SpreadSheetEditor.createCell(billingRow, "Q", String.format("%.2f", unitPrice / 1.27D));
 
 				if (amount % unitPrice != 0) {
 					SpreadSheetEditor.createCell(billingRow, "V",
