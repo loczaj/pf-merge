@@ -1,5 +1,9 @@
 package hu.palferi.mergetool.spreadsheet;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -131,9 +135,18 @@ public class SpreadSheetEditor {
 
 	public static double getNumericCellValue(Row row, String column) {
 		Cell cell = row.getCell(CellReference.convertColStringToIndex(column));
+
 		if (cell != null && cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
 			return cell.getNumericCellValue();
-		else
-			return 0;
+
+		if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING) {
+			NumberFormat nf = NumberFormat.getInstance(new Locale("hu", "HU"));
+			try {
+				return nf.parse(cell.getStringCellValue()).doubleValue();
+			} catch (ParseException e) {
+			}
+		}
+
+		return 0;
 	}
 }
