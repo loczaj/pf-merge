@@ -2,8 +2,6 @@ package hu.palferi.mergetool.spreadsheet;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.poi.hssf.util.CellReference;
@@ -152,19 +150,17 @@ public class SpreadSheetEditor {
 		return 0;
 	}
 
-	public static List<String> readColumn(Sheet sheet, String column) {
-		List<String> result = new ArrayList<>();
+	public static ColumnMap<String> readStringColumn(Sheet sheet, String column) {
+		ColumnMap<String> result = new ColumnMap<>();
 		Cell cell;
 
 		for (Row row : sheet) {
 			cell = row.getCell(CellReference.convertColStringToIndex(column));
 			if (cell != null) {
 				if (cell.getCellType() == Cell.CELL_TYPE_STRING)
-					result.add(cell.getStringCellValue());
+					result.put(row.getRowNum(), cell.getStringCellValue());
 				else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
-					result.add(Double.toString(cell.getNumericCellValue()));
-				else
-					result.add("");
+					result.put(row.getRowNum(), Double.toString(cell.getNumericCellValue()));
 			}
 		}
 

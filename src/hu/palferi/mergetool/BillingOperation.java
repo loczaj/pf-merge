@@ -1,14 +1,12 @@
 package hu.palferi.mergetool;
 
+import hu.palferi.mergetool.spreadsheet.ColumnMap;
 import hu.palferi.mergetool.spreadsheet.SpreadSheetEditor;
-import hu.palferi.mergetool.text.ListConverter;
-import hu.palferi.mergetool.text.ListMatcher;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -36,18 +34,18 @@ public class BillingOperation {
 			Sheet customerSheet = customerBook.createSheet();
 			Sheet billingSheet = billingBook.createSheet();
 
-			Map<Integer, Integer> pairs = new HashMap<>();
-			List<String> partners = SpreadSheetEditor.readColumn(transferSheet, "I");
-			List<String> messages = SpreadSheetEditor.readColumn(transferSheet, "L");
-			List<String> registeredNames = SpreadSheetEditor.readColumn(registrationSheet, "B");
+			ColumnMap<String> partners = SpreadSheetEditor.readStringColumn(transferSheet, "I");
+			ColumnMap<String> messages = SpreadSheetEditor.readStringColumn(transferSheet, "L");
+			ColumnMap<String> participants = SpreadSheetEditor.readStringColumn(registrationSheet, "B");
 
 			Function<String, String> cleanString = str -> str.replaceAll("\\s+", "").toLowerCase();
-			partners = ListConverter.convert(partners, cleanString);
-			messages = ListConverter.convert(messages, cleanString);
-			registeredNames = ListConverter.convert(registeredNames, cleanString);
+			partners = partners.convert(cleanString);
+			messages = messages.convert(cleanString);
+			participants = participants.convert(cleanString);
 
-			ListMatcher.doContainsMatch(pairs, partners, registeredNames);
-			ListMatcher.doContainsMatch(pairs, messages, registeredNames);
+			Map<Integer, Integer> pairs = new HashMap<>();
+			partners.matchTo(pairs, participants, String::contains);
+			messages.matchTo(pairs, participants, String::contains);
 
 			// RowMatcher.doStringContainsMatch(pairs, transferSheet, registrationSheet, "I", "B");
 			// RowMatcher.doStringContainsMatch(pairs, transferSheet, registrationSheet, "L", "B");
