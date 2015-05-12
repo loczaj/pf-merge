@@ -8,7 +8,7 @@
 
 	<target name="compile">
 		<mkdir dir="${build}" />
-		<javac srcdir="." destdir="${build}">
+		<javac srcdir="." destdir="${build}" includeantruntime="false">
 			<classpath>
 				<fileset dir="${tools}/poi-3.11">
 					<include name="**/*.jar" />
