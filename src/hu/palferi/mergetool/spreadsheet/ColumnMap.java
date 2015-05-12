@@ -27,7 +27,7 @@ public class ColumnMap<T> extends HashMap<Integer, T> {
 		return result;
 	}
 
-	public void matchTo(Map<Integer, Integer> pairs, ColumnMap<T> column, BiPredicate<T, T> matcher) {
+	public void matchTo(ColumnMap<T> column, BiPredicate<T, T> matcher, Map<Integer, Integer> pairs) {
 
 		for (Entry<Integer, T> aEntry : this.entrySet()) {
 

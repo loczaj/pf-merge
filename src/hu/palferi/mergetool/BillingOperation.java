@@ -46,8 +46,8 @@ public class BillingOperation {
 			participants = participants.filter(filterName).convert(cleanName);
 
 			Map<Integer, Integer> pairs = new HashMap<>();
-			partners.matchTo(pairs, participants, String::contains);
-			messages.matchTo(pairs, participants, String::contains);
+			partners.matchTo(participants, String::contains, pairs);
+			messages.matchTo(participants, String::contains, pairs);
 
 			// RowMatcher.doStringContainsMatch(pairs, transferSheet, registrationSheet, "I", "B");
 			// RowMatcher.doStringContainsMatch(pairs, transferSheet, registrationSheet, "L", "B");
