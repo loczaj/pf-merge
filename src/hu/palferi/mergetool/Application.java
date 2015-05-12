@@ -82,7 +82,8 @@ public class Application extends JPanel implements ActionListener {
 					Application contentPane = new Application();
 					contentPane.setOpaque(true);
 
-					JFrame frame = new JFrame("Párosító Progi");
+					JFrame frame = new JFrame("Párosító Progi - "
+							+ Application.class.getPackage().getImplementationVersion());
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setContentPane(contentPane);
 					frame.pack();

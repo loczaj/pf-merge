@@ -1,0 +1,48 @@
+<project name="pf-merge" default="build" basedir=".">
+	<description>
+		 Special administrative tool for a non-profit organization
+	</description>
+
+	<property name="build" location="build" />
+	<property name="tools" location="../../tools" />
+
+	<target name="compile">
+		<mkdir dir="${build}" />
+		<javac srcdir="." destdir="${build}">
+			<classpath>
+				<fileset dir="${tools}/poi-3.11">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir="${tools}/diff-match-patch">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar">
+		<delete file="parosito.jar" />
+
+		<tstamp>
+			<format property="today" pattern="yyyy-MM-dd" />
+		</tstamp>
+
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Main-Class" value="hu.palferi.mergetool.Application" />
+			<attribute name="Class-Path" value=". lib/poi-3.11-20141221.jar lib/xmlbeans-2.6.0.jar lib/poi-ooxml-schemas-3.11-20141221.jar lib/poi-ooxml-3.11-20141221.jar" />
+			<attribute name="Implementation-Version" value="${today}" />
+		</manifest>
+
+		<jar destfile="${build}/parosito.jar" basedir="${build}" includes="**/*.class" manifest="MANIFEST.MF" />
+	</target>
+
+	<target name="cleanup">
+		<delete>
+			<fileset dir="${build}" includes="**/*.class" />
+			<fileset file="MANIFEST.MF" />
+		</delete>
+	</target>
+
+	<target name="build" depends="compile,jar,cleanup" />
+</project>
