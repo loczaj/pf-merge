@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ColumnMap<T> extends HashMap<Integer, T> {
 
@@ -13,7 +14,16 @@ public class ColumnMap<T> extends HashMap<Integer, T> {
 		ColumnMap<T2> result = new ColumnMap<>();
 
 		this.entrySet().stream().forEach(e -> result.put(e.getKey(), operation.apply(e.getValue())));
-		
+
+		return result;
+	}
+
+	public ColumnMap<T> filter(Predicate<T> filter) {
+		ColumnMap<T> result = new ColumnMap<>();
+
+		this.entrySet().stream().filter(e -> filter.test(e.getValue()))
+				.forEach(e -> result.put(e.getKey(), e.getValue()));
+
 		return result;
 	}
 

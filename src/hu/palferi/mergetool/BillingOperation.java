@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
@@ -38,10 +39,11 @@ public class BillingOperation {
 			ColumnMap<String> messages = SpreadSheetEditor.readStringColumn(transferSheet, "L");
 			ColumnMap<String> participants = SpreadSheetEditor.readStringColumn(registrationSheet, "B");
 
-			Function<String, String> cleanString = str -> str.replaceAll("\\s+", "").toLowerCase();
-			partners = partners.convert(cleanString);
-			messages = messages.convert(cleanString);
-			participants = participants.convert(cleanString);
+			Function<String, String> cleanName = str -> str.replaceAll("\\s+", "").toLowerCase();
+			Predicate<String> filterName = str -> str.length() > 5;
+			partners = partners.filter(filterName).convert(cleanName);
+			messages = messages.filter(filterName).convert(cleanName);
+			participants = participants.filter(filterName).convert(cleanName);
 
 			Map<Integer, Integer> pairs = new HashMap<>();
 			partners.matchTo(pairs, participants, String::contains);
