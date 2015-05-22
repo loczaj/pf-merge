@@ -10,7 +10,7 @@
 		<mkdir dir="${build}" />
 		<javac srcdir="." destdir="${build}" includeantruntime="false">
 			<classpath>
-				<fileset dir="${tools}/poi-3.11">
+				<fileset dir="${tools}/poi-3.12">
 					<include name="**/*.jar" />
 				</fileset>
 				<fileset dir="${tools}/diff-match-patch">
@@ -30,7 +30,7 @@
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="hu.palferi.mergetool.Application" />
-			<attribute name="Class-Path" value=". lib/poi-3.11-20141221.jar lib/xmlbeans-2.6.0.jar lib/poi-ooxml-schemas-3.11-20141221.jar lib/poi-ooxml-3.11-20141221.jar" />
+			<attribute name="Class-Path" value=". lib/poi-3.12.jar lib/xmlbeans-2.6.0.jar lib/poi-ooxml-schemas-3.12.jar lib/poi-ooxml-3.12.jar" />
 			<attribute name="Implementation-Version" value="${today}" />
 		</manifest>
 
