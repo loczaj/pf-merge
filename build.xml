@@ -21,7 +21,7 @@
 	</target>
 
 	<target name="jar">
-		<delete file="parosito.jar" />
+		<delete file="pf-merge.jar" />
 
 		<tstamp>
 			<format property="today" pattern="yyyy-MM-dd" />
@@ -34,7 +34,7 @@
 			<attribute name="Implementation-Version" value="${today}" />
 		</manifest>
 
-		<jar destfile="${build}/parosito.jar" basedir="${build}" includes="**/*.class" manifest="MANIFEST.MF" />
+		<jar destfile="${build}/pf-merge.jar" basedir="${build}" includes="**/*.class" manifest="MANIFEST.MF" />
 	</target>
 
 	<target name="cleanup">
