@@ -11,13 +11,18 @@ public class IOFilesPanel extends JPanel {
 	public FileOpenPanel lowerFilePanel;
 
 	public IOFilesPanel(String borderTitle, String upperTitle, String lowerTitle, boolean write) {
+		this(borderTitle, upperTitle, lowerTitle, write, write);
+	}
+
+	public IOFilesPanel(String borderTitle, String upperTitle, String lowerTitle, boolean upperWrite,
+			boolean lowerWrite) {
 
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(borderTitle),
 				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
-		upperFilePanel = new FileOpenPanel(upperTitle, write);
-		lowerFilePanel = new FileOpenPanel(lowerTitle, write);
+		upperFilePanel = new FileOpenPanel(upperTitle, upperWrite);
+		lowerFilePanel = new FileOpenPanel(lowerTitle, lowerWrite);
 
 		add(upperFilePanel);
 		add(lowerFilePanel);

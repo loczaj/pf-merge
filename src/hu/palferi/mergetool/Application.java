@@ -1,7 +1,8 @@
 package hu.palferi.mergetool;
 
-import hu.palferi.mergetool.ui.BillingPanel;
+import hu.palferi.mergetool.ui.CustomerPanel;
 import hu.palferi.mergetool.ui.IOFilesPanel;
+import hu.palferi.mergetool.ui.ParameterPanel;
 import hu.palferi.mergetool.ui.PreviewPanel;
 
 import java.awt.Dimension;
@@ -22,22 +23,26 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 public class Application extends JPanel implements ActionListener {
 
 	private IOFilesPanel inputFilesPanel;
-	private BillingPanel billingPanel;
+	private CustomerPanel customerPanel;
+	private ParameterPanel parameterPanel;
 
 	public Application() {
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		inputFilesPanel = new IOFilesPanel("Bemeneti fájlok", "Utalások", "Regisztációk", false);
+		inputFilesPanel = new IOFilesPanel("Rendezvény fájlok", "Utalások", "Regisztációk", false);
 		add(inputFilesPanel);
 
-		billingPanel = new BillingPanel();
-		billingPanel.startButton.addActionListener(this);
+		parameterPanel = new ParameterPanel();
+		add(parameterPanel);
+
+		customerPanel = new CustomerPanel();
+		customerPanel.startButton.addActionListener(this);
 
 		PreviewPanel previewPanel = new PreviewPanel();
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Számla import készítés", billingPanel);
+		tabbedPane.addTab("Ügyfél karbantartás", customerPanel);
 		tabbedPane.addTab("Előnézet", previewPanel);
 		add(tabbedPane);
 	}
@@ -46,19 +51,17 @@ public class Application extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		if (inputFilesPanel.upperFilePanel.canUseSelectedFile()
 				&& inputFilesPanel.lowerFilePanel.canUseSelectedFile()) {
-			if (event.getSource() == billingPanel.startButton) {
-				// Billing operation
-				if (billingPanel.outputFilesPanel.upperFilePanel.canUseSelectedFile()
-						&& billingPanel.outputFilesPanel.lowerFilePanel.canUseSelectedFile()) {
-					BillingOperation billing = new BillingOperation();
+			if (event.getSource() == customerPanel.startButton) {
+				// Customer operation
+				if (customerPanel.filesPanel.upperFilePanel.canUseSelectedFile()
+						&& customerPanel.filesPanel.lowerFilePanel.canUseSelectedFile()) {
+					CustomerMaintenance customerMaintenance = new CustomerMaintenance();
 					try {
-						billing.run(inputFilesPanel.upperFilePanel.getSelectedFile(),
+						customerMaintenance.run(inputFilesPanel.upperFilePanel.getSelectedFile(),
 								inputFilesPanel.lowerFilePanel.getSelectedFile(),
-								billingPanel.outputFilesPanel.upperFilePanel.getSelectedFile(),
-								billingPanel.outputFilesPanel.lowerFilePanel.getSelectedFile(),
-								billingPanel.getCustomerCodePrefix(), billingPanel.getUnitPrice(),
-								billingPanel.getStricture());
-
+								customerPanel.filesPanel.upperFilePanel.getSelectedFile(),
+								customerPanel.filesPanel.lowerFilePanel.getSelectedFile(),
+								parameterPanel.getProgramName(), parameterPanel.getStricture());
 					} catch (InvalidFormatException | IOException ex) {
 						ex.printStackTrace();
 						JOptionPane.showMessageDialog(null, ex.toString(), "Uppsz",
