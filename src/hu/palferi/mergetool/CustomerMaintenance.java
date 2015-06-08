@@ -32,32 +32,79 @@ public class CustomerMaintenance {
 
 			Sheet newCustomerSheet = newCustomerBook.createSheet();
 
-			ColumnMap<String> partners = SpreadSheetEditor.readStringColumn(transferSheet, "I");
-			ColumnMap<String> messages = SpreadSheetEditor.readStringColumn(transferSheet, "L");
-			ColumnMap<String> participants = SpreadSheetEditor.readStringColumn(registrationSheet, "B");
+			// Read columns needed
+			ColumnMap<String> transferName = SpreadSheetEditor.readStringColumn(transferSheet, "I");
+			ColumnMap<String> transferMessage = SpreadSheetEditor.readStringColumn(transferSheet, "L");
 
-			Function<String, String> cleanName = str -> str.replaceAll("\\s+", "").toLowerCase();
-			Predicate<String> filterName = str -> str.length() > 5;
-			partners = partners.filter(filterName).convert(cleanName);
-			messages = messages.filter(filterName).convert(cleanName);
-			participants = participants.filter(filterName).convert(cleanName);
+			ColumnMap<String> regName = SpreadSheetEditor.readStringColumn(registrationSheet, "B");
+			ColumnMap<String> regEmail = SpreadSheetEditor.readStringColumn(registrationSheet, "D");
+			ColumnMap<String> regAddress = SpreadSheetEditor.readStringColumns(registrationSheet,
+					new String[] { "K", "L", "M", "N", "O" }, " ");
 
+			ColumnMap<String> kulcsName = SpreadSheetEditor.readStringColumn(kulcsCustomerSheet, "A");
+			ColumnMap<String> kulcsEmail = SpreadSheetEditor.readStringColumn(kulcsCustomerSheet, "G");
+			ColumnMap<String> kulcsAddress = SpreadSheetEditor.readStringColumn(kulcsCustomerSheet, "D");
+
+			// Converter, filter
+			Function<String, String> dropSpace = str -> str.replaceAll("\\s+", "").toLowerCase();
+			Function<String, String> dropSpecial = str -> str.replaceAll("[,./]", "").toLowerCase();
+			Predicate<String> lengthFilter = str -> str.length() > 5;
+
+			// Do filtering
+			transferName = transferName.filter(lengthFilter).convert(dropSpace);
+			transferMessage = transferMessage.filter(lengthFilter).convert(dropSpace);
+			regName = regName.filter(lengthFilter).convert(dropSpace);
+			regEmail = regEmail.filter(lengthFilter).convert(dropSpace);
+			kulcsName = kulcsName.filter(lengthFilter).convert(dropSpace);
+			kulcsEmail = kulcsEmail.filter(lengthFilter).convert(dropSpace);
+
+			regAddress = regAddress.filter(lengthFilter).convert(dropSpace).convert(dropSpecial);
+			kulcsAddress = kulcsAddress.filter(lengthFilter).convert(dropSpace).convert(dropSpecial);
+
+			// Find matching pairs in transfers - registrations
 			Map<Integer, Integer> pairs = new HashMap<>();
-			partners.matchTo(participants, String::contains, pairs);
-			messages.matchTo(participants, String::contains, pairs);
+			transferName.matchTo(regName, String::contains, pairs);
+			transferMessage.matchTo(regName, String::contains, pairs);
 
-			Row transferRow, registrationRow, newCustomerRow;
+			// Find matching pairs in transfers - kulcssoft
+			Map<Integer, Integer> matchingNames = new HashMap<>();
+			Map<Integer, Integer> matchingEmails = new HashMap<>();
+			Map<Integer, Integer> matchingAddresses = new HashMap<>();
+			regName.matchTo(kulcsName, String::equals, matchingNames);
+			regEmail.matchTo(kulcsEmail, String::equals, matchingEmails);
+			regAddress.matchTo(kulcsAddress, String::equals, matchingAddresses);
+
+			// Iterate on matching pairs, create new customer sheet
+			Row registrationRow, newCustomerRow, kulcsRow;
+			String customerCode;
 			int rowNumber = 0;
 			for (Entry<Integer, Integer> pair : pairs.entrySet()) {
 
-				// System.out.println(set.getKey() + " - " + set.getValue());
+				customerCode = "";
 
-				transferRow = transferSheet.getRow(pair.getKey());
-				registrationRow = registrationSheet.getRow(pair.getValue());
+				// Integer transferRownum = pair.getKey();
+				Integer regRownum = pair.getValue();
+				Integer kulcsRownum = matchingEmails.get(regRownum);
+				
+				// System.out.println(regAddress.get(regRownum));
+
+				if (kulcsRownum != null) {
+					if (kulcsRownum.equals(matchingNames.get(regRownum))) {
+						if (kulcsRownum.equals(matchingAddresses.get(regRownum))) {
+							continue;
+						} else {
+							kulcsRow = kulcsCustomerSheet.getRow(kulcsRownum);
+							customerCode = SpreadSheetEditor.getStringCellValue(kulcsRow, "B");
+						}
+					}
+				}
+
+				// transferRow = transferSheet.getRow(transferRownum);
+				registrationRow = registrationSheet.getRow(regRownum);
 				newCustomerRow = newCustomerSheet.createRow(rowNumber);
 
 				// Customer book
-				//SpreadSheetEditor.createCell(newCustomerRow, "B", customerCode);
+				SpreadSheetEditor.createCell(newCustomerRow, "B", customerCode);
 				SpreadSheetEditor.realignCells(registrationRow, newCustomerRow, new String[][] {
 						{ "B", "A" }, { "D", "O" }, { "K", "C" }, { "L", "D" }, { "M", "E" },
 						{ "N", "F" }, { "O", "G" } });

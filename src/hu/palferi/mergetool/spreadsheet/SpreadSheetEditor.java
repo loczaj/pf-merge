@@ -2,7 +2,10 @@ package hu.palferi.mergetool.spreadsheet;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
@@ -150,6 +153,18 @@ public class SpreadSheetEditor {
 		return 0;
 	}
 
+	public static String getStringCellValue(Row row, String column) {
+		Cell cell = row.getCell(CellReference.convertColStringToIndex(column));
+
+		if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING)
+			return cell.getStringCellValue();
+
+		if (cell != null && cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
+			return Integer.toString((int) cell.getNumericCellValue());
+
+		return "No string value in cell";
+	}
+
 	public static ColumnMap<String> readStringColumn(Sheet sheet, String column) {
 		ColumnMap<String> result = new ColumnMap<>();
 		Cell cell;
@@ -160,7 +175,29 @@ public class SpreadSheetEditor {
 				if (cell.getCellType() == Cell.CELL_TYPE_STRING)
 					result.put(row.getRowNum(), cell.getStringCellValue());
 				else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
-					result.put(row.getRowNum(), Double.toString(cell.getNumericCellValue()));
+					result.put(row.getRowNum(), Integer.toString((int) cell.getNumericCellValue()));
+			}
+		}
+
+		return result;
+	}
+
+	public static ColumnMap<String> readStringColumns(Sheet sheet, String[] columns, String separator) {
+		List<ColumnMap<String>> columnMaps = new ArrayList<>();
+		ColumnMap<String> result = new ColumnMap<>();
+
+		for (String column : columns) {
+			columnMaps.add(readStringColumn(sheet, column));
+		}
+
+		if (columnMaps.get(0).entrySet().size() > 0) {
+			for (Entry<Integer, String> entry : columnMaps.get(0).entrySet()) {
+				String value = "";
+				for (ColumnMap<String> columnMap : columnMaps) {
+					value += columnMap.get(entry.getKey()) + separator;
+				}
+
+				result.put(entry.getKey(), value.substring(0, value.length() - separator.length()));
 			}
 		}
 
